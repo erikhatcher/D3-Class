@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <title>Practice Assignment 1</title>
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+  <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+
+  <style>
+
+    body {
+      font: 10px sans-serif;
+    }
+  
+    .chart {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+    }
+
+    .axis path, .axis line {
+      fill: none;
+      stroke: #0000ff;
+      shape-rendering: crispEdges;
+    }
+
+    .bar {
+      z-index: 1000;
+    }
+
+/*    #bar-demo {
+    	border: solid;
+    }
+*/
+    .chart {
+    	border: solid;
+    }
+
+  </style>
+
+<script type="text/javascript">
+$(document).ready(function(){ /// jQuery function that starts JavaScript when DOM loads
+/// Data in JSON format. In this type of JSON variables before ":" are called keys, after semicolon are called values.
+var data=[{"Quantity":"100","fruits":"Apples"},{"Quantity":"60","fruits":"Pears"},{"Quantity":"70","fruits":"Tangerines"},{"Quantity":"90","fruits":"Pomegranates"},{"Quantity":"50","fruits":"Oranges"}];
+
+//var margin = {top: 40, right: 40, bottom: 40, left:40},
+    width = 600, 
+    height = 500;
+
+
+var x = d3.scale.linear() 
+    .domain([0, d3.max(data, function(d) { return +d.Quantity;})])
+    .range([0, width]); 
+
+var y = d3.scale.ordinal()
+       .domain(data.map(function(d) {return d.fruits;}))
+       .rangeBands([height,0])
+
+var svg = d3.select('#bar-demo').append('svg')
+    .attr('class', 'chart')
+    .attr('width', width)
+    .attr('height', height)
+  .append('g');
+//    .attr('transform', 'translate(' + 0 + ', ' + 0 + ')'); /// TODO: set up margins
+
+
+var colors = d3.scale.category20();
+
+svg.selectAll('.chart') 
+    .data(data)
+  .enter().append('rect') 
+    .attr('class', 'bar')
+    .attr("fill",function(d,i){return colors(i);})
+//    .attr('style', 'fill: red')
+    .attr('x', function(d) { return 0; })
+    .attr('y', function(d) { return y(d.fruits); })
+    .attr('height', function(d) {return y.rangeBand();})
+    .attr('width', function(d) { return x(+d.Quantity) }); 
+
+ svg.selectAll(".rect")
+     .data(data)
+   .enter().append("svg:text")
+     .attr("x", function(d) { return 0; }) 
+     .attr("y", function(d) { return y(d.fruits) + y.rangeBand()/2; })
+     .attr("dx", "0.5em")
+     .attr("dy", "1.50em")
+     .attr("text-anchor", "left")
+     .text(function(d) { return d.fruits }); 	
+});
+
+</script>
+
+</head>
+	<body>
+
+<h1>Practice Assignment 1</h1>
+
+<div>Create a bar or a column chart.
+
+If you do not have advanced programming skills, create a column chart similar to my charts. Add your own data, change colors and title. 
+
+If you are more advanced at programming, create a bar chart for the following dataset:
+
+<pre>
+var data=[{"Quantity":"100","fruits":"Apples"},{"Quantity":"60","fruits":"Pears"},{"Quantity":"70","fruits":"Tangerines"},{"Quantity":"90","fruits":"Pomegranates"},{"Quantity":"50","fruits":"Oranges"}];
+</pre>
+
+Show values on the x-axis, and categories on the y-axis. Make x-axis a linear scale and y-axis an ordinal scale. 
+</div>
+
+<hr/>
+
+	<div id="bar-demo"  style="position: relative; top: 3px; left: 20px;"></div>
+	
+</body>
+</html>
+
+
